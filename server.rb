@@ -1,9 +1,18 @@
 require 'socket'               # Get sockets from stdlib
 
-server = TCPServer.open(2000)  # Socket to listen on port 2000
+server = TCPServer.new('localhost', 2000)  # Socket to listen on port 2000
 loop do                         # Servers run forever
-  client = server.accept       # Wait for a client to connect
-  client.puts(Time.now.ctime)  # Send the time to the client
-  client.puts "Closing the connection. Bye!"
-  client.close                 # Disconnect from the client
+  socket = server.accept     # Wait for a client to connect
+  request = socket.gets
+  STDERR.puts request
+  
+  response = "Hello World!\n"
+  
+  socket.print "HTTP/1.1 200 OK\r\n" +
+               "Content-Type: text/plain\r\n" +
+               "Content-Length: #{response.bytesize}\r\n" +
+               "Connection: close\r\n"
+  socket.print "\r\n"
+  socket.print response
+  socket.close
 end
