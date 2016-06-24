@@ -57,15 +57,19 @@ server = TCPServer.new('localhost', 3000)
 
 loop do
   socket       = server.accept
+  
+  
   request_line = socket.gets
 
   STDERR.puts request_line
-
+  puts request_line
+  
+  
   path = requested_file(request_line)
 
   # Make sure the file exists and is not a directory
   # before attempting to open it.
-  puts path
+  
   if File.exist?(path) # && !File.directory?(path)
     File.open(path, "rb") do |file|
       socket.print "HTTP/1.1 200 OK\r\n" +
