@@ -29,7 +29,7 @@ end
 def requested_file(request_line)
   request_uri  = request_line.split(" ")[1]
   path         = URI.unescape(URI(request_uri).path)
-
+  
   File.join(WEB_ROOT, path)
 end
 
@@ -38,7 +38,7 @@ end
 # similar to that of the "Hello World" example
 # shown earlier.
 
-server = TCPServer.new('localhost', 2345)
+server = TCPServer.new('localhost', 3000)
 
 loop do
   socket       = server.accept
@@ -50,7 +50,8 @@ loop do
 
   # Make sure the file exists and is not a directory
   # before attempting to open it.
-  if File.exist?(path) && !File.directory?(path)
+  puts path
+  if File.exist?(path) # && !File.directory?(path)
     File.open(path, "rb") do |file|
       socket.print "HTTP/1.1 200 OK\r\n" +
                    "Content-Type: #{content_type(file)}\r\n" +
@@ -63,7 +64,7 @@ loop do
       IO.copy_stream(file, socket)
     end
   else
-    message = "File not found\n"
+    message = " File not found\n #{path}"
 
     # respond with a 404 error code to indicate the file does not exist
     socket.print "HTTP/1.1 404 Not Found\r\n" +
