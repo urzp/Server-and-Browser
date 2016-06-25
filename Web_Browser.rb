@@ -15,7 +15,7 @@ port = 3000                           # Default HTTP port
 #  input.upcase!
 #end
 
-input = 'POST'
+input = 'GET'
 
 if input == "POST"
   name  = "Paul"
@@ -35,9 +35,9 @@ end
 
 socket = TCPSocket.open(host,port)  # Connect to server
 socket.print(request)               # Send request
-#response = socket.read              # Read complete response
+response = socket.read              # Read complete response
 # Split response at first blank line into headers and body
-#headers,body = response.split("\r\n\r\n", 2) 
-#print headers
-#print body                          # And display it
+headers,body = response.split("\r\n\r\n", 2) 
+print headers
+print body                          # And display it
 socket.close
