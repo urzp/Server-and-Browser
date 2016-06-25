@@ -4,8 +4,7 @@ require 'json'
 params = Hash.new { |hash, key| hash[key] = Hash.new }  
 host = 'localhost'     # The web server
 port = 3000                           # Default HTTP port
-path = "./index.html"               
-path = "./thanks.html"                 
+             
 
 
 # input validation: require GET or POST
@@ -18,8 +17,19 @@ path = "./thanks.html"
 
 input = 'POST'
 
-# This is the HTTP request we send to fetch a file
-request = "GET #{path} HTTP/1.0\r\n\r\n"
+if input == "POST"
+  name  = "Paul"
+  email = "Paul@mail.com"
+  path = "./thanks.html"   
+  body = params.to_json
+  request =  "POST /thanks.html HTTP/1.0\r\nContent-Length: #{params.to_json.length}\r\n\r\n#{body}"  
+else 
+  path = "./index.html"  
+  request = "GET #{path} HTTP/1.0\r\n\r\n" 
+end
+
+
+
 
 socket = TCPSocket.open(host,port)  # Connect to server
 socket.print(request)               # Send request
