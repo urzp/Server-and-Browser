@@ -15,7 +15,7 @@ port = 3000                           # Default HTTP port
 #  input.upcase!
 #end
 
-input = 'GET'
+input = 'POST'
 
 if input == "POST"
   name  = "Paul"
