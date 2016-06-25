@@ -71,28 +71,22 @@ loop do
   # before attempting to open it.
   
   if File.exist?(path) # && !File.directory?(path)
-    File.open(path, "rb") do |file|
-      socket.print "HTTP/1.1 200 OK\r\n" +
+    file = File.read(path)
+    socket.print "HTTP/1.1 200 OK\r\n" +
                    "Content-Type: #{content_type(file)}\r\n" +
                    "Content-Length: #{file.size}\r\n" +
-                   "Connection: close\r\n"
-
-      socket.print "\r\n"
-
+                   "Connection: close\r\n" +
+				   "\r\n"
       # write the contents of the file to the socket
-      IO.copy_stream(file, socket)
-    end
+    socket.print file
   else
     message = " File not found\n #{path}"
-
     # respond with a 404 error code to indicate the file does not exist
     socket.print "HTTP/1.1 404 Not Found\r\n" +
                  "Content-Type: text/plain\r\n" +
                  "Content-Length: #{message.size}\r\n" +
-                 "Connection: close\r\n"
-
-    socket.print "\r\n"
-
+                 "Connection: close\r\n" +
+				 "\r\n"
     socket.print message
   end
 
