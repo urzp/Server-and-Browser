@@ -62,24 +62,30 @@ loop do
   request_line = socket.gets
 
   STDERR.puts request_line
-  puts request_line
+
   
-  
+  method = request_line.split[0]  
   path = requested_file(request_line)
 
-  # Make sure the file exists and is not a directory
-  # before attempting to open it.
   
   if File.exist?(path) # && !File.directory?(path)
-    File.open(path, "rb") do |file|
-      socket.print "HTTP/1.1 200 OK\r\n" +
-                   "Content-Type: #{content_type(file)}\r\n" +
-                   "Content-Length: #{file.size}\r\n" +
-                   "Connection: close\r\n" +
-				   "\r\n"
-      # write the contents of the file to the socket
-      IO.copy_stream(file, socket)
-    end
+	socket.print "HTTP/1.1 200 OK\r\n"
+	
+	if method == 'GET'
+	  File.open(path, "rb") do |file|
+        socket.print "Content-Type: #{content_type(file)}\r\n" +
+                     "Content-Length: #{file.size}\r\n" +
+                     "Connection: close\r\n" +
+	  	  		     "\r\n"
+        # write the contents of the file to the socket
+        IO.copy_stream(file, socket)
+      end
+	end
+	
+	if method == 'POST'
+	
+	end
+	
   else
     message = " File not found\n #{path}"
     # respond with a 404 error code to indicate the file does not exist
