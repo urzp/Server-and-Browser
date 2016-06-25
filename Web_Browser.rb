@@ -21,6 +21,8 @@ if input == "POST"
   name  = "Paul"
   email = "Paul@mail.com"
   path = "./thanks.html"   
+  params [:person][:name] = name 
+  params [:person][:email] = email 
   body = params.to_json
   request =  "POST /thanks.html HTTP/1.0\r\nContent-Length: #{params.to_json.length}\r\n\r\n#{body}"  
 else 
@@ -33,8 +35,9 @@ end
 
 socket = TCPSocket.open(host,port)  # Connect to server
 socket.print(request)               # Send request
-response = socket.read              # Read complete response
+#response = socket.read              # Read complete response
 # Split response at first blank line into headers and body
-headers,body = response.split("\r\n\r\n", 2) 
-print headers
-print body                          # And display it
+#headers,body = response.split("\r\n\r\n", 2) 
+#print headers
+#print body                          # And display it
+socket.close
