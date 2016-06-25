@@ -5,7 +5,9 @@
  uri = URI.parse(url)
  http = Net::HTTP.new(uri.host, uri.port)
  request = Net::HTTP::Post.new(uri.request_uri)
- parameters =  {"as_q" => "test drive", "hl" => "ru", :test => 10 }
+ parameters =  {:viking => {:name=>"Erik the Red", :email=>"erikthered@theodinproject.com"} }
  request.set_form_data(parameters)    
  response = http.request(request)
  puts response.body
+  http.close
+ 

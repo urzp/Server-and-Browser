@@ -7,5 +7,6 @@ loop do
   while line = socket.gets 
     puts line.chop 
   end
-s.close  
+  
+socket.close  
 end
