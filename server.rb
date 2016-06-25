@@ -1,5 +1,6 @@
 require 'socket'
 require 'uri'
+require 'json'
 
 # Files will be served from this directory
 WEB_ROOT = './public'
@@ -59,14 +60,20 @@ loop do
   socket       = server.accept
   
   
-  request_line = socket.gets
+  #request_line = socket.gets
 
-  STDERR.puts request_line
-
+  #STDERR.puts request_line
   
-  method = request_line.split[0]  
-  path = requested_file(request_line)
-
+  
+  request = socket.read_nonblock(256)
+  request_header, request_body = request.split("\r\n\r\n", 2) 
+  method = request.split[0]  
+  path = requested_file(request)
+ 
+  #puts request_header
+  #puts request_body
+  #puts path
+  #puts method
   
   if File.exist?(path) # && !File.directory?(path)
 	socket.print "HTTP/1.1 200 OK\r\n"
@@ -83,7 +90,11 @@ loop do
 	end
 	
 	if method == 'POST'
-	
+	    params = JSON.parse(request_body)
+        user_data = "<li>name: #{params['person']['name']}</li><li>e-mail: #{params['person']['email']}</li>"
+		file = File.read(path)
+		socket.puts file.gsub('<%= yield %>', user_data)
+		
 	end
 	
   else
